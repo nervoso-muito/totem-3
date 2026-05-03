@@ -1,0 +1,746 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  totem.ui - GTK3 Builder UI definition for Totem Movie Player
+  Copyright (c) 2026 nervoso@k1.com.br with Claude Code (Anthropic)
+
+  This file describes the main window layout.  It does NOT include:
+    - GStreamer elements (playbin, gtksink, equalizer, preamp)
+    - Menus (built programmatically due to dynamic visualization list)
+    - CSS providers (applied in code)
+    - Signal connections (wired in code)
+    - The video_area widget (obtained from gtksink at runtime)
+-->
+<interface>
+  <requires lib="gtk+" version="3.22"/>
+
+  <!-- Main Window -->
+  <object class="GtkWindow" id="main_window">
+    <property name="title" translatable="yes">Movie Player</property>
+    <property name="default-width">650</property>
+    <property name="default-height">480</property>
+    <child>
+      <!-- Main vertical container -->
+      <object class="GtkBox" id="main_vbox">
+        <property name="visible">True</property>
+        <property name="orientation">vertical</property>
+        <property name="spacing">0</property>
+
+        <!-- Menu bar placeholder (built programmatically) -->
+        <child>
+          <object class="GtkMenuBar" id="menubar">
+            <property name="visible">True</property>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">False</property>
+          </packing>
+        </child>
+
+        <!-- HPaned: video+controls (left) | playlist (right) -->
+        <child>
+          <object class="GtkPaned" id="paned">
+            <property name="visible">True</property>
+            <property name="orientation">horizontal</property>
+
+            <!-- Left pane: video + controls -->
+            <child>
+              <object class="GtkBox" id="left_vbox">
+                <property name="visible">True</property>
+                <property name="orientation">vertical</property>
+                <property name="spacing">0</property>
+
+                <!-- Etched frame around video area -->
+                <child>
+                  <object class="GtkFrame" id="video_frame">
+                    <property name="visible">True</property>
+                    <property name="shadow-type">etched-in</property>
+                    <!-- CSS: #video_frame { background-color: #333333; } -->
+                    <child>
+                      <!-- Video overlay (black background + gtksink widget) -->
+                      <object class="GtkOverlay" id="video_overlay">
+                        <property name="visible">True</property>
+                        <property name="hexpand">True</property>
+                        <property name="vexpand">True</property>
+                        <property name="events">GDK_BUTTON_PRESS_MASK</property>
+                        <child>
+                          <!-- Black background (shown when not playing) -->
+                          <object class="GtkEventBox" id="video_background">
+                            <property name="visible">True</property>
+                            <property name="hexpand">True</property>
+                            <property name="vexpand">True</property>
+                            <property name="name">video_background</property>
+                            <!-- CSS: #video_background { background-color: black; } -->
+                          </object>
+                        </child>
+                        <!-- video_area from gtksink added as overlay at runtime -->
+                      </object>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="expand">True</property>
+                    <property name="fill">True</property>
+                  </packing>
+                </child>
+
+                <!-- Controls area -->
+                <child>
+                  <object class="GtkBox" id="controls_vbox">
+                    <property name="visible">True</property>
+                    <property name="orientation">vertical</property>
+                    <property name="spacing">6</property>
+                    <property name="border-width">6</property>
+
+                    <!-- Seek bar row -->
+                    <child>
+                      <object class="GtkBox" id="seek_hbox">
+                        <property name="visible">True</property>
+                        <property name="orientation">horizontal</property>
+                        <property name="spacing">6</property>
+
+                        <!-- Time label -->
+                        <child>
+                          <object class="GtkLabel" id="time_label">
+                            <property name="visible">True</property>
+                            <property name="label">00:00 / 00:00</property>
+                          </object>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="fill">False</property>
+                          </packing>
+                        </child>
+
+                        <!-- Seek slider -->
+                        <child>
+                          <object class="GtkScale" id="seek_scale">
+                            <property name="visible">True</property>
+                            <property name="orientation">horizontal</property>
+                            <property name="draw-value">False</property>
+                            <property name="sensitive">False</property>
+                            <property name="adjustment">seek_adjustment</property>
+                          </object>
+                          <packing>
+                            <property name="expand">True</property>
+                            <property name="fill">True</property>
+                          </packing>
+                        </child>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">False</property>
+                      </packing>
+                    </child>
+
+                    <!-- Buttons row -->
+                    <child>
+                      <object class="GtkBox" id="btn_hbox">
+                        <property name="visible">True</property>
+                        <property name="orientation">horizontal</property>
+                        <property name="spacing">6</property>
+
+                        <!-- Sidebar toggle (left) -->
+                        <child>
+                          <object class="GtkToggleButton" id="sidebar_button">
+                            <property name="visible">True</property>
+                            <property name="label" translatable="yes">Sidebar</property>
+                            <property name="tooltip-text" translatable="yes">Show/Hide Sidebar (F9)</property>
+                          </object>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="fill">False</property>
+                          </packing>
+                        </child>
+
+                        <!-- Spacer (left) -->
+                        <child>
+                          <object class="GtkBox" id="spacer_left">
+                            <property name="visible">True</property>
+                            <property name="orientation">horizontal</property>
+                          </object>
+                          <packing>
+                            <property name="expand">True</property>
+                            <property name="fill">True</property>
+                          </packing>
+                        </child>
+
+                        <!-- Previous -->
+                        <child>
+                          <object class="GtkButton" id="prev_btn">
+                            <property name="visible">True</property>
+                            <property name="tooltip-text" translatable="yes">Previous (Alt+Left)</property>
+                            <child>
+                              <object class="GtkImage">
+                                <property name="visible">True</property>
+                                <property name="icon-name">media-skip-backward</property>
+                                <property name="icon-size">2</property>
+                              </object>
+                            </child>
+                          </object>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="fill">False</property>
+                          </packing>
+                        </child>
+
+                        <!-- Stop -->
+                        <child>
+                          <object class="GtkButton" id="stop_btn">
+                            <property name="visible">True</property>
+                            <property name="tooltip-text" translatable="yes">Stop</property>
+                            <child>
+                              <object class="GtkImage">
+                                <property name="visible">True</property>
+                                <property name="icon-name">media-playback-stop</property>
+                                <property name="icon-size">2</property>
+                              </object>
+                            </child>
+                          </object>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="fill">False</property>
+                          </packing>
+                        </child>
+
+                        <!-- Play/Pause -->
+                        <child>
+                          <object class="GtkButton" id="play_btn">
+                            <property name="visible">True</property>
+                            <property name="tooltip-text" translatable="yes">Play/Pause (Space)</property>
+                            <child>
+                              <object class="GtkImage">
+                                <property name="visible">True</property>
+                                <property name="icon-name">media-playback-start</property>
+                                <property name="icon-size">2</property>
+                              </object>
+                            </child>
+                          </object>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="fill">False</property>
+                          </packing>
+                        </child>
+
+                        <!-- Next -->
+                        <child>
+                          <object class="GtkButton" id="next_btn">
+                            <property name="visible">True</property>
+                            <property name="tooltip-text" translatable="yes">Next (Alt+Right)</property>
+                            <child>
+                              <object class="GtkImage">
+                                <property name="visible">True</property>
+                                <property name="icon-name">media-skip-forward</property>
+                                <property name="icon-size">2</property>
+                              </object>
+                            </child>
+                          </object>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="fill">False</property>
+                          </packing>
+                        </child>
+
+                        <!-- Spacer (right) -->
+                        <child>
+                          <object class="GtkBox" id="spacer_right">
+                            <property name="visible">True</property>
+                            <property name="orientation">horizontal</property>
+                          </object>
+                          <packing>
+                            <property name="expand">True</property>
+                            <property name="fill">True</property>
+                          </packing>
+                        </child>
+
+                        <!-- Volume button (right side) -->
+                        <child>
+                          <object class="GtkVolumeButton" id="volume_button">
+                            <property name="visible">True</property>
+                            <property name="adjustment">volume_adjustment</property>
+                          </object>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="fill">False</property>
+                            <property name="pack-type">end</property>
+                          </packing>
+                        </child>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">False</property>
+                      </packing>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">False</property>
+                  </packing>
+                </child>
+              </object>
+              <packing>
+                <property name="resize">True</property>
+                <property name="shrink">False</property>
+              </packing>
+            </child>
+
+            <!-- Right pane: playlist sidebar in etched frame -->
+            <child>
+              <object class="GtkFrame" id="playlist_frame">
+                <property name="visible">True</property>
+                <property name="shadow-type">etched-in</property>
+                <child>
+                  <object class="GtkBox" id="sidebar_box">
+                    <property name="visible">True</property>
+                    <property name="orientation">vertical</property>
+                    <property name="spacing">6</property>
+
+                    <!-- Playlist header -->
+                    <child>
+                      <object class="GtkLabel" id="playlist_header">
+                        <property name="visible">True</property>
+                        <property name="use-markup">True</property>
+                        <property name="label" translatable="yes">&lt;b&gt;Playlist&lt;/b&gt;</property>
+                        <property name="xalign">0</property>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">False</property>
+                        <property name="padding">4</property>
+                      </packing>
+                    </child>
+
+                    <!-- Scrolled playlist tree view -->
+                    <child>
+                      <object class="GtkScrolledWindow" id="playlist_scroll">
+                        <property name="visible">True</property>
+                        <property name="hscrollbar-policy">automatic</property>
+                        <property name="vscrollbar-policy">automatic</property>
+                        <property name="shadow-type">in</property>
+                        <child>
+                          <object class="GtkTreeView" id="playlist_view">
+                            <property name="visible">True</property>
+                            <property name="model">playlist_store</property>
+                            <property name="headers-visible">False</property>
+                            <property name="reorderable">True</property>
+                            <child>
+                              <object class="GtkTreeViewColumn" id="name_column">
+                                <property name="title">Name</property>
+                                <property name="expand">True</property>
+                                <child>
+                                  <object class="GtkCellRendererText" id="name_renderer">
+                                    <property name="ellipsize">end</property>
+                                  </object>
+                                  <attributes>
+                                    <attribute name="text">2</attribute><!-- COL_NAME -->
+                                  </attributes>
+                                </child>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+                      </object>
+                      <packing>
+                        <property name="expand">True</property>
+                        <property name="fill">True</property>
+                      </packing>
+                    </child>
+
+                    <!-- Playlist buttons row -->
+                    <child>
+                      <object class="GtkBox" id="playlist_btnbox">
+                        <property name="visible">True</property>
+                        <property name="orientation">horizontal</property>
+                        <property name="spacing">2</property>
+                        <property name="homogeneous">True</property>
+
+                        <!-- Add -->
+                        <child>
+                          <object class="GtkButton" id="pl_add_btn">
+                            <property name="visible">True</property>
+                            <property name="relief">none</property>
+                            <property name="tooltip-text" translatable="yes">Add...</property>
+                            <child>
+                              <object class="GtkImage">
+                                <property name="visible">True</property>
+                                <property name="icon-name">list-add</property>
+                                <property name="icon-size">2</property>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+
+                        <!-- Remove -->
+                        <child>
+                          <object class="GtkButton" id="pl_remove_btn">
+                            <property name="visible">True</property>
+                            <property name="sensitive">False</property>
+                            <property name="relief">none</property>
+                            <property name="tooltip-text" translatable="yes">Remove</property>
+                            <child>
+                              <object class="GtkImage">
+                                <property name="visible">True</property>
+                                <property name="icon-name">list-remove</property>
+                                <property name="icon-size">2</property>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+
+                        <!-- Save -->
+                        <child>
+                          <object class="GtkButton" id="pl_save_btn">
+                            <property name="visible">True</property>
+                            <property name="sensitive">False</property>
+                            <property name="relief">none</property>
+                            <property name="tooltip-text" translatable="yes">Save Playlist...</property>
+                            <child>
+                              <object class="GtkImage">
+                                <property name="visible">True</property>
+                                <property name="icon-name">document-save</property>
+                                <property name="icon-size">2</property>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+
+                        <!-- Move Up -->
+                        <child>
+                          <object class="GtkButton" id="pl_up_btn">
+                            <property name="visible">True</property>
+                            <property name="sensitive">False</property>
+                            <property name="relief">none</property>
+                            <property name="tooltip-text" translatable="yes">Move Up</property>
+                            <child>
+                              <object class="GtkImage">
+                                <property name="visible">True</property>
+                                <property name="icon-name">go-up</property>
+                                <property name="icon-size">2</property>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+
+                        <!-- Move Down -->
+                        <child>
+                          <object class="GtkButton" id="pl_down_btn">
+                            <property name="visible">True</property>
+                            <property name="sensitive">False</property>
+                            <property name="relief">none</property>
+                            <property name="tooltip-text" translatable="yes">Move Down</property>
+                            <child>
+                              <object class="GtkImage">
+                                <property name="visible">True</property>
+                                <property name="icon-name">go-down</property>
+                                <property name="icon-size">2</property>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">False</property>
+                      </packing>
+                    </child>
+                  </object>
+                </child>
+              </object>
+              <packing>
+                <property name="resize">False</property>
+                <property name="shrink">True</property>
+              </packing>
+            </child>
+          </object>
+          <packing>
+            <property name="expand">True</property>
+            <property name="fill">True</property>
+          </packing>
+        </child>
+
+        <!-- Statusbar -->
+        <child>
+          <object class="GtkStatusbar" id="statusbar">
+            <property name="visible">True</property>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">False</property>
+          </packing>
+        </child>
+      </object>
+    </child>
+  </object>
+
+  <!-- Adjustments -->
+  <object class="GtkAdjustment" id="seek_adjustment">
+    <property name="lower">0</property>
+    <property name="upper">100</property>
+    <property name="step-increment">1</property>
+  </object>
+
+  <object class="GtkAdjustment" id="volume_adjustment">
+    <property name="lower">0</property>
+    <property name="upper">1</property>
+    <property name="value">0.5</property>
+    <property name="step-increment">0.05</property>
+  </object>
+
+  <!-- Playlist data model -->
+  <object class="GtkListStore" id="playlist_store">
+    <columns>
+      <column type="gint"/>      <!-- COL_PLAYING (0) -->
+      <column type="gchararray"/><!-- COL_URI (1) -->
+      <column type="gchararray"/><!-- COL_NAME (2) -->
+    </columns>
+  </object>
+
+  <!-- Tone Control dialog -->
+  <object class="GtkDialog" id="tone_control_dialog">
+    <property name="title" translatable="yes">Tone Control</property>
+    <property name="resizable">False</property>
+    <property name="modal">True</property>
+    <child internal-child="vbox">
+      <object class="GtkBox">
+        <property name="visible">True</property>
+        <property name="orientation">vertical</property>
+        <property name="border-width">12</property>
+        <child>
+          <object class="GtkGrid" id="eq_grid">
+            <property name="visible">True</property>
+            <property name="row-spacing">8</property>
+            <property name="column-spacing">12</property>
+
+            <!-- Row 0: Preamp -->
+            <child>
+              <object class="GtkLabel">
+                <property name="visible">True</property>
+                <property name="label" translatable="yes">Preamp</property>
+                <property name="halign">end</property>
+              </object>
+              <packing>
+                <property name="left-attach">0</property>
+                <property name="top-attach">0</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkScale" id="preamp_slider">
+                <property name="visible">True</property>
+                <property name="orientation">horizontal</property>
+                <property name="width-request">250</property>
+                <property name="draw-value">True</property>
+                <property name="value-pos">right</property>
+                <property name="adjustment">preamp_adjustment</property>
+                <marks>
+                  <mark value="0" position="bottom">0</mark>
+                </marks>
+              </object>
+              <packing>
+                <property name="left-attach">1</property>
+                <property name="top-attach">0</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkLabel">
+                <property name="visible">True</property>
+                <property name="label">dB</property>
+              </object>
+              <packing>
+                <property name="left-attach">2</property>
+                <property name="top-attach">0</property>
+              </packing>
+            </child>
+
+            <!-- Row 1: Separator -->
+            <child>
+              <object class="GtkSeparator">
+                <property name="visible">True</property>
+                <property name="orientation">horizontal</property>
+              </object>
+              <packing>
+                <property name="left-attach">0</property>
+                <property name="top-attach">1</property>
+                <property name="width">3</property>
+              </packing>
+            </child>
+
+            <!-- Row 2: Bass -->
+            <child>
+              <object class="GtkLabel">
+                <property name="visible">True</property>
+                <property name="label" translatable="yes">Bass</property>
+                <property name="halign">end</property>
+              </object>
+              <packing>
+                <property name="left-attach">0</property>
+                <property name="top-attach">2</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkScale" id="bass_slider">
+                <property name="visible">True</property>
+                <property name="orientation">horizontal</property>
+                <property name="width-request">250</property>
+                <property name="draw-value">True</property>
+                <property name="value-pos">right</property>
+                <property name="adjustment">eq_band_adjustment</property>
+                <marks>
+                  <mark value="0" position="bottom">0</mark>
+                </marks>
+              </object>
+              <packing>
+                <property name="left-attach">1</property>
+                <property name="top-attach">2</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkLabel">
+                <property name="visible">True</property>
+                <property name="label">dB</property>
+              </object>
+              <packing>
+                <property name="left-attach">2</property>
+                <property name="top-attach">2</property>
+              </packing>
+            </child>
+
+            <!-- Row 3: Mid -->
+            <child>
+              <object class="GtkLabel">
+                <property name="visible">True</property>
+                <property name="label" translatable="yes">Mid</property>
+                <property name="halign">end</property>
+              </object>
+              <packing>
+                <property name="left-attach">0</property>
+                <property name="top-attach">3</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkScale" id="mid_slider">
+                <property name="visible">True</property>
+                <property name="orientation">horizontal</property>
+                <property name="width-request">250</property>
+                <property name="draw-value">True</property>
+                <property name="value-pos">right</property>
+                <property name="adjustment">eq_band_adjustment</property>
+                <marks>
+                  <mark value="0" position="bottom">0</mark>
+                </marks>
+              </object>
+              <packing>
+                <property name="left-attach">1</property>
+                <property name="top-attach">3</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkLabel">
+                <property name="visible">True</property>
+                <property name="label">dB</property>
+              </object>
+              <packing>
+                <property name="left-attach">2</property>
+                <property name="top-attach">3</property>
+              </packing>
+            </child>
+
+            <!-- Row 4: Treble -->
+            <child>
+              <object class="GtkLabel">
+                <property name="visible">True</property>
+                <property name="label" translatable="yes">Treble</property>
+                <property name="halign">end</property>
+              </object>
+              <packing>
+                <property name="left-attach">0</property>
+                <property name="top-attach">4</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkScale" id="treble_slider">
+                <property name="visible">True</property>
+                <property name="orientation">horizontal</property>
+                <property name="width-request">250</property>
+                <property name="draw-value">True</property>
+                <property name="value-pos">right</property>
+                <property name="adjustment">eq_band_adjustment</property>
+                <marks>
+                  <mark value="0" position="bottom">0</mark>
+                </marks>
+              </object>
+              <packing>
+                <property name="left-attach">1</property>
+                <property name="top-attach">4</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkLabel">
+                <property name="visible">True</property>
+                <property name="label">dB</property>
+              </object>
+              <packing>
+                <property name="left-attach">2</property>
+                <property name="top-attach">4</property>
+              </packing>
+            </child>
+
+            <!-- Row 5: Reset + Disable -->
+            <child>
+              <object class="GtkBox" id="eq_btn_box">
+                <property name="visible">True</property>
+                <property name="orientation">horizontal</property>
+                <property name="spacing">12</property>
+                <child>
+                  <object class="GtkButton" id="eq_reset_btn">
+                    <property name="visible">True</property>
+                    <property name="label" translatable="yes">Reset</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">False</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkCheckButton" id="eq_disable_chk">
+                    <property name="visible">True</property>
+                    <property name="label" translatable="yes">Disable</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">False</property>
+                  </packing>
+                </child>
+              </object>
+              <packing>
+                <property name="left-attach">1</property>
+                <property name="top-attach">5</property>
+              </packing>
+            </child>
+          </object>
+        </child>
+      </object>
+    </child>
+    <child type="action">
+      <object class="GtkButton" id="eq_close_btn">
+        <property name="visible">True</property>
+        <property name="label" translatable="yes">_Close</property>
+        <property name="use-underline">True</property>
+      </object>
+    </child>
+    <action-widgets>
+      <action-widget response="close">eq_close_btn</action-widget>
+    </action-widgets>
+  </object>
+
+  <!-- EQ Adjustments -->
+  <object class="GtkAdjustment" id="preamp_adjustment">
+    <property name="lower">-12</property>
+    <property name="upper">24</property>
+    <property name="value">0</property>
+    <property name="step-increment">1</property>
+  </object>
+
+  <object class="GtkAdjustment" id="eq_band_adjustment">
+    <property name="lower">-24</property>
+    <property name="upper">12</property>
+    <property name="value">0</property>
+    <property name="step-increment">1</property>
+  </object>
+</interface>

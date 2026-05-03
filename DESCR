@@ -1,0 +1,5 @@
+Totem is a movie player for the GNOME/MATE desktop based on GStreamer 1.0.
+It features a playlist sidebar, fullscreen mode, seek and volume controls,
+subtitle support, and keyboard navigation.
+
+This is a GTK3/GStreamer 1.0 rewrite preserving the Totem 2.32 look and feel.

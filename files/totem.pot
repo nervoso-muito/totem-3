@@ -1,0 +1,314 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-05-01 22:11-0300\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: totem.c:588 totem.c:594
+#, c-format
+msgid "Error: %s"
+msgstr ""
+
+#: totem.c:771
+#, c-format
+msgid "%s - Movie Player"
+msgstr ""
+
+#: totem.c:792
+msgid "Paused"
+msgstr ""
+
+#: totem.c:795
+msgid "Playing"
+msgstr ""
+
+#: totem.c:832 totem.c:1724 totem.c:2046 totem.c:2367
+msgid "Movie Player"
+msgstr ""
+
+#: totem.c:833
+msgid "Stopped"
+msgstr ""
+
+#: totem.c:984
+msgid "Add Files"
+msgstr ""
+
+#: totem.c:986 totem.c:1052 totem.c:1332 totem.c:1690
+msgid "_Cancel"
+msgstr ""
+
+#: totem.c:987 totem.c:1333 totem.c:1691
+msgid "_Open"
+msgstr ""
+
+#: totem.c:991
+msgid "Media Files"
+msgstr ""
+
+#: totem.c:997
+msgid "All Files"
+msgstr ""
+
+#: totem.c:1003
+msgid "Playlists"
+msgstr ""
+
+#: totem.c:1050
+msgid "Save Playlist"
+msgstr ""
+
+#: totem.c:1053
+msgid "_Save"
+msgstr ""
+
+#: totem.c:1097
+msgid "Playlist saved"
+msgstr ""
+
+#: totem.c:1099
+#, c-format
+msgid "Save failed: %s"
+msgstr ""
+
+#: totem.c:1330
+msgid "Open Location"
+msgstr ""
+
+#: totem.c:1339
+msgid "URL:"
+msgstr ""
+
+#: totem.c:1418
+msgid "Totem Preferences"
+msgstr ""
+
+#: totem.c:1420 totem.c:1572
+msgid "_Close"
+msgstr ""
+
+#: totem.c:1432
+msgid "Start playing files from last position"
+msgstr ""
+
+#: totem.c:1438
+msgid "General"
+msgstr ""
+
+#: totem.c:1570
+msgid "Tone Control"
+msgstr ""
+
+#: totem.c:1587
+msgid "Preamp"
+msgstr ""
+
+#: totem.c:1616
+msgid "Bass"
+msgstr ""
+
+#: totem.c:1616
+msgid "Mid"
+msgstr ""
+
+#: totem.c:1616
+msgid "Treble"
+msgstr ""
+
+#: totem.c:1649
+msgid "Reset"
+msgstr ""
+
+#: totem.c:1688
+msgid "Select Subtitles"
+msgstr ""
+
+#: totem.c:1694
+msgid "Subtitle Files"
+msgstr ""
+
+#: totem.c:1706
+msgid "Subtitles loaded"
+msgstr ""
+
+#: totem.c:1763
+msgid "_Movie"
+msgstr ""
+
+#: totem.c:1767
+msgid "_Open..."
+msgstr ""
+
+#: totem.c:1769
+msgid "Open _Location..."
+msgstr ""
+
+#: totem.c:1774 totem.c:1898
+msgid "Play / P_ause"
+msgstr ""
+
+#: totem.c:1778
+msgid "_Quit"
+msgstr ""
+
+#: totem.c:1783
+msgid "_Edit"
+msgstr ""
+
+#: totem.c:1787
+msgid "_Repeat Mode"
+msgstr ""
+
+#: totem.c:1790
+msgid "Shuff_le Mode"
+msgstr ""
+
+#: totem.c:1795
+msgid "_Clear Playlist"
+msgstr ""
+
+#: totem.c:1800
+msgid "Prefere_nces"
+msgstr ""
+
+#: totem.c:1806
+msgid "_View"
+msgstr ""
+
+#: totem.c:1810 totem.c:1906
+msgid "_Fullscreen"
+msgstr ""
+
+#: totem.c:1816
+msgid "S_ubtitles"
+msgstr ""
+
+#: totem.c:1819
+msgid "_Select Text Subtitles..."
+msgstr ""
+
+#: totem.c:1826
+msgid "S_idebar"
+msgstr ""
+
+#: totem.c:1832
+msgid "_Go"
+msgstr ""
+
+#: totem.c:1836
+msgid "_Next Chapter/Movie"
+msgstr ""
+
+#: totem.c:1839
+msgid "_Previous Chapter/Movie"
+msgstr ""
+
+#: totem.c:1844
+msgid "Skip _Forward"
+msgstr ""
+
+#: totem.c:1847
+msgid "Skip _Backwards"
+msgstr ""
+
+#: totem.c:1853
+msgid "_Sound"
+msgstr ""
+
+#: totem.c:1857
+msgid "Volume _Up"
+msgstr ""
+
+#: totem.c:1860
+msgid "Volume _Down"
+msgstr ""
+
+#: totem.c:1865
+msgid "_Tone Control..."
+msgstr ""
+
+#: totem.c:1871
+msgid "_Help"
+msgstr ""
+
+#: totem.c:1875
+msgid "_About"
+msgstr ""
+
+#: totem.c:1900
+msgid "_Next"
+msgstr ""
+
+#: totem.c:1902
+msgid "_Previous"
+msgstr ""
+
+#: totem.c:1927
+msgid "Playlist"
+msgstr ""
+
+#: totem.c:1974
+msgid "Add..."
+msgstr ""
+
+#: totem.c:1981
+msgid "Remove"
+msgstr ""
+
+#: totem.c:1989
+msgid "Save Playlist..."
+msgstr ""
+
+#: totem.c:1997
+msgid "Move Up"
+msgstr ""
+
+#: totem.c:2005
+msgid "Move Down"
+msgstr ""
+
+#: totem.c:2134
+msgid "Sidebar"
+msgstr ""
+
+#: totem.c:2137
+msgid "Show/Hide Sidebar (F9)"
+msgstr ""
+
+#: totem.c:2150
+msgid "Previous (Alt+Left)"
+msgstr ""
+
+#: totem.c:2157
+msgid "Stop"
+msgstr ""
+
+#: totem.c:2164
+msgid "Play/Pause (Space)"
+msgstr ""
+
+#: totem.c:2171
+msgid "Next (Alt+Right)"
+msgstr ""
+
+#: totem.c:2396
+msgid ""
+"Failed to initialize GStreamer.\n"
+"Please install gst-plugins1-base and gst-plugins1-good."
+msgstr ""
+
+#: totem.c:2506
+msgid "Ready"
+msgstr ""
